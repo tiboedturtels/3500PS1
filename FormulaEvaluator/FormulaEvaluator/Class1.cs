@@ -23,7 +23,7 @@ namespace FormulaEvaluator
             Stack<double> nums = new Stack<double>();
             Stack<String> operators = new Stack<string>();
 
-            string[] substrings = Regex.Split("", exp);
+            string[] substrings = Regex.Split(exp, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
 
             for(int i = 0; i < substrings.Length; i++)
             {
@@ -36,6 +36,7 @@ namespace FormulaEvaluator
                     else
                         nums.Push(Result);
                 }
+
             }
 
             return -1;

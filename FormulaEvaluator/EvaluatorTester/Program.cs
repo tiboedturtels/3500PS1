@@ -12,8 +12,13 @@ namespace EvaluatorTester
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(Evaluator.Operate(1.0, 2.0, "/"));
+            Console.WriteLine(Evaluator.Evaluate("5+A3", TempLookup));
             Console.Read();
+        }
+
+        static int TempLookup(String s)
+        {
+            return -1;
         }
     }
 }
