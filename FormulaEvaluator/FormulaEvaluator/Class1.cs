@@ -23,23 +23,26 @@ namespace FormulaEvaluator
             Stack<double> nums = new Stack<double>();
             Stack<String> operators = new Stack<string>();
 
+
+            exp = Regex.Replace(exp, " ", "");
             string[] substrings = Regex.Split(exp, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
 
             for(int i = 0; i < substrings.Length; i++)
             {
                 Double Result;
-                if(Double.TryParse(substrings[i], out Result))
-                {
-                    if (operators.Count != 0 && (operators.Peek() == "*" || operators.Peek() == "/"))
-                        nums.Push(Operate(nums.Pop(), Result, operators.Pop()));
+                if (Double.TryParse(substrings[i], out Result))
+                    numInstructions(Result, nums, operators);
 
-                    else
-                        nums.Push(Result);
-                }
+                else if (substrings[i] == "+" || substrings[i] == "-")
+                    addsubInstructions(substrings[i], nums, operators);
 
+                else if (substrings[i] == "*" || substrings[i] == "/")
+                    multdivInstructions(substrings[i], nums, operators);
             }
 
-            return -1;
+            if (operators.Count != 0)
+                return (int) Operate(nums.Pop(), nums.Pop(), operators.Pop());
+            return (int) nums.Pop();
         }
 
         /// <summary>
@@ -49,7 +52,7 @@ namespace FormulaEvaluator
         /// <param name="num2"> The second operand </param>
         /// <param name="operation"> The operation to be performed </param>
         /// <returns> The Double value of the evaluated operation </returns>
-        public static Double Operate(Double num1, Double num2, String operation)
+        public static Double Operate(Double num2, Double num1, String operation)
         {
             if (operation == "*")
                 return num1 * num2;
@@ -64,6 +67,28 @@ namespace FormulaEvaluator
                 return num1 - num2;
 
             return -1.0;
+        }
+
+
+        private static void numInstructions(Double input, Stack<Double> numStack, Stack<String> opStack)
+        {
+            if (opStack.Count != 0 && (opStack.Peek() == "*" || opStack.Peek() == "/"))
+                numStack.Push(Operate(input, numStack.Pop(), opStack.Pop()));
+
+            else
+                numStack.Push(input);
+        }
+
+        private static void addsubInstructions(String op, Stack<Double> numStack, Stack<String> opStack)
+        {
+            if (opStack.Count != 0 && (opStack.Peek() == "+" || opStack.Peek() == "-"))
+                numStack.Push(Operate(numStack.Pop(), numStack.Pop(), opStack.Pop()));
+            opStack.Push(op);
+        }
+
+        private static void multdivInstructions(String op, Stack<Double> numStack, Stack<String> opStack)
+        {
+            opStack.Push(op);
         }
 
     }

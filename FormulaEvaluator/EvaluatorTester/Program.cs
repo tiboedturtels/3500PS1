@@ -12,7 +12,7 @@ namespace EvaluatorTester
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(Evaluator.Evaluate("5+A3", TempLookup));
+            Console.WriteLine(Evaluator.Evaluate("10 / 7 - 4", TempLookup));
             Console.Read();
         }
 
