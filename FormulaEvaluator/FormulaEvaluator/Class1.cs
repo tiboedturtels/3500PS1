@@ -27,8 +27,11 @@ namespace FormulaEvaluator
             exp = Regex.Replace(exp, " ", "");
             string[] substrings = Regex.Split(exp, "(\\()|(\\))|(-)|(\\+)|(\\*)|(/)");
 
+
             for(int i = 0; i < substrings.Length; i++)
             {
+
+
                 Double Result;
                 if (Double.TryParse(substrings[i], out Result))
                     numInstructions(Result, nums, operators);
@@ -36,14 +39,25 @@ namespace FormulaEvaluator
                 else if (substrings[i] == "+" || substrings[i] == "-")
                     addsubInstructions(substrings[i], nums, operators);
 
-                else if (substrings[i] == "*" || substrings[i] == "/")
+                else if (substrings[i] == "*" || substrings[i] == "/" || substrings[i] == "(")
                     multdivInstructions(substrings[i], nums, operators);
+
+                else if (substrings[i] == ")")
+                    closeParenInstruction(nums, operators);
+
+                else if (substrings[i] != "" && Char.IsLetter(substrings[i][0]))
+                    numInstructions(variableEvaluator(substrings[i]), nums, operators);
+
+
+
             }
 
-            if (operators.Count != 0)
-                return (int) Operate(nums.Pop(), nums.Pop(), operators.Pop());
+            while (operators.Count != 0)
+                nums.Push(Operate(nums.Pop(), nums.Pop(), operators.Pop()));
             return (int) nums.Pop();
         }
+
+
 
         /// <summary>
         /// Completes a single operation on two Doubles
@@ -89,6 +103,14 @@ namespace FormulaEvaluator
         private static void multdivInstructions(String op, Stack<Double> numStack, Stack<String> opStack)
         {
             opStack.Push(op);
+        }
+
+        private static void closeParenInstruction(Stack<double> numStack, Stack<string> opStack)
+        {
+            if (opStack.Peek() == "+" || opStack.Peek() == "-" || opStack.Peek() == "*" || opStack.Peek() == "/")
+                numStack.Push(Operate(numStack.Pop(), numStack.Pop(), opStack.Pop()));
+            if (opStack.Pop() != "(")
+                throw new System.ArgumentException("Invalid Syntax");
         }
 
     }

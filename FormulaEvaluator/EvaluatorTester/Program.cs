@@ -12,13 +12,13 @@ namespace EvaluatorTester
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(Evaluator.Evaluate("10 / 7 - 4", TempLookup));
+            Console.WriteLine(Evaluator.Evaluate("(10 - 2) - a7", TempLookup));
             Console.Read();
         }
 
         static int TempLookup(String s)
         {
-            return -1;
+            return 1;
         }
     }
 }
